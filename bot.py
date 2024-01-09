@@ -1,23 +1,29 @@
 import logging
-import os
 import openai
-from dotenv import load_dotenv
 from pyrogram import Client, filters
-
-# Cargar variables de entorno desde el archivo .env
-load_dotenv()
+from configparser import ConfigParser
 
 # Configuración de logging
 logging.basicConfig(format='[%(asctime)s] %(message)s', level=logging.INFO)
 
+# Cargar configuración desde el archivo INI
+config = ConfigParser()
+config.read('config.ini')
+
 # Credenciales de acceso del bot
-API_ID = os.environ.get('API_ID')
-API_HASH = os.environ.get('API_HASH')
-BOT_TOKEN = os.environ.get('BOT_TOKEN')
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')  # Agrega tu clave de API de OpenAI aquí
+API_ID = int(config.get('pyrogram', 'api_id'))
+API_HASH = config.get('pyrogram', 'api_hash')
+BOT_TOKEN = config.get('pyrogram', 'bot_token')
+OPENAI_API_KEY = config.get('pyrogram', 'openai_api_key')
 
 # Inicialización del cliente de Pyrogram
-app = Client('my_bot', api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+app = Client(
+    'my_bot',
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN,
+    parse_mode="html",  # Puedes agregar otras configuraciones según tus necesidades
+)
 
 # Configuración de la clave de API de OpenAI
 openai.api_key = OPENAI_API_KEY
