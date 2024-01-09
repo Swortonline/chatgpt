@@ -22,7 +22,7 @@ app = Client(
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=BOT_TOKEN,
-    parse_mode="html",  # Puedes agregar otras configuraciones según tus necesidades
+    parse_mode='markdown',  # Corregido el valor del parse_mode
 )
 
 # Configuración de la clave de API de OpenAI
@@ -50,7 +50,7 @@ async def handle_message(client, message):
             max_tokens=150
         )
         bot_reply = response.choices[0].text.strip()
-        await client.send_message(message.chat.id, bot_reply)
+        await client.send_message(message.chat.id, bot_reply, parse_mode='markdown')  # Corregido el valor del parse_mode
     except Exception as e:
         logging.error(f'Error en la generación de respuesta con GPT-3: {str(e)}')
         await client.send_message(message.chat.id, 'Lo siento, ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.')
