@@ -1,32 +1,31 @@
+import os
 import logging
-import openai
 from pyrogram import Client, filters
-from configparser import ConfigParser
-
-# Configuración de logging
-logging.basicConfig(format='[%(asctime)s] %(message)s', level=logging.INFO)
-
-# Cargar configuración desde el archivo INI
-config = ConfigParser()
-config.read('config.ini')
+import openai
 
 # Credenciales de acceso del bot
-API_ID = int(config.get('pyrogram', 'api_id'))
-API_HASH = config.get('pyrogram', 'api_hash')
-BOT_TOKEN = config.get('pyrogram', 'bot_token')
-OPENAI_API_KEY = config.get('pyrogram', 'openai_api_key')
+API_ID = "28146160"
+API_HASH = "05d80a5935831931b5a16d14f8289b8c"
+BOT_TOKEN = "6836340890:AAEdiDoaEp1nSyo3masDG1AmCfh8x2X8e1s"
+OPENAI_API_KEY = "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"  # Agrega tu clave de API de OpenAI aquí
 
 # Inicialización del cliente de Pyrogram
-app = Client(
-    'my_bot',
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=BOT_TOKEN,
-    parse_mode='markdown',  # Corregido el valor del parse_mode
-)
+app = Client('my_bot', api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
 # Configuración de la clave de API de OpenAI
 openai.api_key = OPENAI_API_KEY
+
+def generate_gpt_response(user_input):
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=user_input,
+            max_tokens=150
+        )
+        return response.choices[0].text.strip()
+    except Exception as e:
+        logging.error(f'Error en la generación de respuesta con GPT-3: {str(e)}')
+        return 'Lo siento, ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.'
 
 @app.on_message(filters.command(['start']))
 async def start_command(client, message):
@@ -43,17 +42,10 @@ async def handle_message(client, message):
     user_input = message.text
 
     # Utiliza OpenAI's GPT-3 para generar una respuesta
-    try:
-        response = openai.Completion.create(
-            engine="text-davinci-002",
-            prompt=user_input,
-            max_tokens=150
-        )
-        bot_reply = response.choices[0].text.strip()
-        await client.send_message(message.chat.id, bot_reply, parse_mode='markdown')  # Corregido el valor del parse_mode
-    except Exception as e:
-        logging.error(f'Error en la generación de respuesta con GPT-3: {str(e)}')
-        await client.send_message(message.chat.id, 'Lo siento, ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.')
+    bot_reply = generate_gpt_response(user_input)
+
+    # Envía la respuesta al chat
+    await client.send_message(message.chat.id, bot_reply)
 
 # Iniciar el bot de Pyrogram
 app.run()
