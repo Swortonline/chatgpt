@@ -1,4 +1,5 @@
 python-telegram-bot
 openai
 pyrogram
+pyrogram[tgcrypto]
 
