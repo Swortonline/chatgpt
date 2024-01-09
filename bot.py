@@ -6,8 +6,8 @@ import openai
 # Credenciales de acceso del bot
 API_ID = "28146160"
 API_HASH = "05d80a5935831931b5a16d14f8289b8c"
-BOT_TOKEN = "6836340890:AAEdiDoaEp1nSyo3masDG1AmCfh8x2X8e1s"
-OPENAI_API_KEY = "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"  # Agrega tu clave de API de OpenAI aquí
+BOT_TOKEN = "6836340890:AAHNZC3n4sbGz06Sc1OIuw0p57UOIcOuAFA"
+OPENAI_API_KEY = "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"  # Agrega tu clave de API de OpenAI aquí
 
 # Inicialización del cliente de Pyrogram
 app = Client('my_bot', api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
